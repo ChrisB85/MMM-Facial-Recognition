@@ -47,13 +47,13 @@ to_node("status", 'Loading training data...')
 # set algorithm to be used based on setting in config.js
 if config.get("recognitionAlgorithm") == 1:
     to_node("status", "ALGORITHM: LBPH")
-    model = cv2.createLBPHFaceRecognizer(threshold=config.get("lbphThreshold"))
+    model = cv2.face.createLBPHFaceRecognizer(threshold=config.get("lbphThreshold"))
 elif config.get("recognitionAlgorithm") == 2:
     to_node("status", "ALGORITHM: Fisher")
-    model = cv2.createFisherFaceRecognizer(threshold=config.get("fisherThreshold"))
+    model = cv2.face.createFisherFaceRecognizer(threshold=config.get("fisherThreshold"))
 else:
     to_node("status", "ALGORITHM: Eigen")
-    model = cv2.createEigenFaceRecognizer(threshold=config.get("eigenThreshold"))
+    model = cv2.face.createEigenFaceRecognizer(threshold=config.get("eigenThreshold"))
 
 # Load training file specified in config.js
 model.load(config.get("trainingFile"))
