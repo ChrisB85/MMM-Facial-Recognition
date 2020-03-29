@@ -47,6 +47,7 @@ Module.register('MMM-Facial-Recognition',{
       			nl: "translations/nl.json",
 			sv: "translations/sv.json",
 			fr: "translations/fr.json",
+                        pl: "translations/pl.json",
 			id: "translations/id.json"
 		};
 	},
