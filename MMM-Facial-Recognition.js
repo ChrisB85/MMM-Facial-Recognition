@@ -53,16 +53,24 @@ Module.register('MMM-Facial-Recognition',{
 	},
 
 	login_user: function () {
+		var self = this;
+		var modules = MM.getModules();
 
-    var self = this;
-
-		MM.getModules().withClass(this.config.defaultClass).exceptWithClass(this.config.everyoneClass).enumerate(function(module) {
+		// Hide default modules
+		modules.filter(function(module) {
+			return module.config.classes && 
+				module.config.classes.includes(self.config.defaultClass) && 
+				(!module.config.classes.includes(self.config.everyoneClass));
+		}).forEach(function(module) {
 			module.hide(1000, function() {
 				Log.log(module.name + ' is hidden.');
 			}, {lockString: self.identifier});
 		});
 
-		MM.getModules().withClass(this.current_user).enumerate(function(module) {
+		// Show user-specific modules
+		modules.filter(function(module) {
+			return module.config.classes && module.config.classes.includes(self.current_user);
+		}).forEach(function(module) {
 			module.show(1000, function() {
 				Log.log(module.name + ' is shown.');
 			}, {lockString: self.identifier});
@@ -70,17 +78,26 @@ Module.register('MMM-Facial-Recognition',{
 
 		this.sendNotification("CURRENT_USER", this.current_user);
 	},
+
 	logout_user: function () {
+		var self = this;
+		var modules = MM.getModules();
 
-    var self = this;
-
-		MM.getModules().withClass(this.current_user).enumerate(function(module) {
+		// Hide user-specific modules
+		modules.filter(function(module) {
+			return module.config.classes && module.config.classes.includes(self.current_user);
+		}).forEach(function(module) {
 			module.hide(1000, function() {
 				Log.log(module.name + ' is hidden.');
 			}, {lockString: self.identifier});
 		});
 
-		MM.getModules().withClass(this.config.defaultClass).exceptWithClass(this.config.everyoneClass).enumerate(function(module) {
+		// Show default modules
+		modules.filter(function(module) {
+			return module.config.classes && 
+				module.config.classes.includes(self.config.defaultClass) && 
+				(!module.config.classes.includes(self.config.everyoneClass));
+		}).forEach(function(module) {
 			module.show(1000, function() {
 				Log.log(module.name + ' is shown.');
 			}, {lockString: self.identifier});
