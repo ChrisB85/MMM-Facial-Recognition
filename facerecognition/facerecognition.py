@@ -150,7 +150,7 @@ while True:
                 # if the user is diffrent reset same_user_detected_in_row back to 0
                 same_user_detected_in_row = 0
             # A user only gets logged in if he is predicted twice in a row minimizing prediction errors.
-            if (label != current_user and same_user_detected_in_row > 1):
+            if (label != current_user and same_user_detected_in_row > 0):
                 current_user = label
                 # Callback current user to node helper
                 to_node("login", {"user": label, "confidence": str(confidence)})
