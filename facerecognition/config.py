@@ -31,9 +31,9 @@ FACE_HEIGHT = 112
 # You don't need to modify this unless you know what you're doing.
 # See: http://docs.opencv.org/modules/objdetect/doc/cascade_classification.html
 HAAR_FACES = path_to_file + '/haarcascade_frontalface.xml'
-HAAR_SCALE_FACTOR = 1.3
-HAAR_MIN_NEIGHBORS = 4
-HAAR_MIN_SIZE = (30, 30)
+HAAR_SCALE_FACTOR = 1.1
+HAAR_MIN_NEIGHBORS = 3
+HAAR_MIN_SIZE = (20, 20)
 
 CONFIG = json.loads(sys.argv[1]);
 

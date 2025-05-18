@@ -136,21 +136,16 @@ while True:
         # Debug logging
         to_node("status", f"Recognition result - Label: {label}, Confidence: {confidence}")
         to_node("status", f"Current threshold: {config.get('lbphThreshold') if config.get('recognitionAlgorithm') == 1 else config.get('fisherThreshold') if config.get('recognitionAlgorithm') == 2 else config.get('eigenThreshold')}")
+        to_node("status", f"Image quality - Mean brightness: {crop.mean():.2f}, Std dev: {crop.std():.2f}")
+        to_node("status", f"Face detection - Scale factor: {config.HAAR_SCALE_FACTOR}, Min neighbors: {config.HAAR_MIN_NEIGHBORS}")
         to_node("status", f"Same user detected in row: {same_user_detected_in_row}")
         to_node("status", f"Last match: {last_match}, Current user: {current_user}")
         # We have a match if the label is not "-1" which equals unknown because of exceeded threshold and is not "0" which are negtive training images (see training folder).
         if (label != -1 and label != 0):
             # Set login time
             login_timestamp = time.time()
-            # Routine to count how many times the same user is detected
-            if (label == last_match and same_user_detected_in_row < 2):
-                # if same user as last time increment same_user_detected_in_row +1
-                same_user_detected_in_row += 1
-            if label != last_match:
-                # if the user is diffrent reset same_user_detected_in_row back to 0
-                same_user_detected_in_row = 0
-            # A user only gets logged in if he is predicted twice in a row minimizing prediction errors.
-            if (label != current_user and same_user_detected_in_row > 0):
+            # If this is a new user or different from current user, log them in
+            if (label != current_user):
                 current_user = label
                 # Callback current user to node helper
                 to_node("login", {"user": label, "confidence": str(confidence)})
