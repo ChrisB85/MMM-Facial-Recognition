@@ -58,7 +58,7 @@ else:
     model = cv2.face.createEigenFaceRecognizer(threshold=config.get("eigenThreshold"))
 
 # Load training file specified in config.js
-#model.read(config.get("trainingFile"))
+model.read(train_file)
 
 import os
 
@@ -76,6 +76,7 @@ else:
 if not os.path.exists(train_file):
     raise FileNotFoundError(f"Brak pliku treningowego: {train_file}")
 
+to_node("status", f'Loading training data from: {train_file}')
 
 to_node("status", 'Training data loaded!')
 
