@@ -104,6 +104,11 @@ while True:
         image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
         # Get coordinates of single face in captured image.
         result = face.detect_single(image)
+        # Debug logging
+        if result is None:
+            to_node("status", "No face detected in image")
+        else:
+            to_node("status", f"Face detected at coordinates: {result}")
         # No face found, logout user?
         if result is None:
             # if last detection exceeds timeout and there is someone logged in -> logout!
@@ -122,6 +127,8 @@ while True:
             crop = face.resize(face.crop(image, x, y, w, h))
         # Test face against model.
         label, confidence = model.predict(crop)
+        # Debug logging
+        to_node("status", f"Recognition result - Label: {label}, Confidence: {confidence}")
         # We have a match if the label is not "-1" which equals unknown because of exceeded threshold and is not "0" which are negtive training images (see training folder).
         if (label != -1 and label != 0):
             # Set login time
