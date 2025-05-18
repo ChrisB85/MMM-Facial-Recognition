@@ -59,3 +59,5 @@ class OpenCVCapture(Thread):
     def stop(self):
         self.running = False
         self.join()
+
+#model.read(config.get("trainingFile"))

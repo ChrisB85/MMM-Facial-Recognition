@@ -107,13 +107,17 @@ while True:
         # Debug logging
         if result is None:
             to_node("status", "No face detected in image")
+            to_node("status", "Image size: " + str(image.shape))
         else:
             to_node("status", f"Face detected at coordinates: {result}")
+            to_node("status", f"Face size: width={result[2]}, height={result[3]}")
+            to_node("status", f"Image size: {image.shape}")
         # No face found, logout user?
         if result is None:
             # if last detection exceeds timeout and there is someone logged in -> logout!
             if (current_user is not None and time.time() - login_timestamp > config.get("logoutDelay")):
                 # callback logout to node helper
+                to_node("status", f"Logging out user {current_user} due to timeout")
                 to_node("logout", {"user": current_user})
                 same_user_detected_in_row = 0
                 current_user = None
@@ -123,12 +127,17 @@ while True:
         # Crop image on face. If algorithm is not LBPH also resize because in all other algorithms image resolution has to be the same as training image resolution.
         if config.get("recognitionAlgorithm") == 1:
             crop = face.crop(image, x, y, w, h)
+            to_node("status", f"Cropped image size: {crop.shape}")
         else:
             crop = face.resize(face.crop(image, x, y, w, h))
+            to_node("status", f"Resized cropped image size: {crop.shape}")
         # Test face against model.
         label, confidence = model.predict(crop)
         # Debug logging
         to_node("status", f"Recognition result - Label: {label}, Confidence: {confidence}")
+        to_node("status", f"Current threshold: {config.get('lbphThreshold') if config.get('recognitionAlgorithm') == 1 else config.get('fisherThreshold') if config.get('recognitionAlgorithm') == 2 else config.get('eigenThreshold')}")
+        to_node("status", f"Same user detected in row: {same_user_detected_in_row}")
+        to_node("status", f"Last match: {last_match}, Current user: {current_user}")
         # We have a match if the label is not "-1" which equals unknown because of exceeded threshold and is not "0" which are negtive training images (see training folder).
         if (label != -1 and label != 0):
             # Set login time
