@@ -25,7 +25,7 @@ import signal
 def to_node(type, message):
     # convert to json and print (node helper will read from stdout)
     try:
-        print(json.dumps({type: message}))
+        print((json.dumps({type: message})))
     except Exception:
         pass
     # stdout has to be flushed manually to prevent delays in the node helper communication
@@ -47,7 +47,9 @@ to_node("status", 'Loading training data...')
 # set algorithm to be used based on setting in config.js
 if config.get("recognitionAlgorithm") == 1:
     to_node("status", "ALGORITHM: LBPH")
-    model = cv2.face.createLBPHFaceRecognizer(threshold=config.get("lbphThreshold"))
+#    model = cv2.face.createLBPHFaceRecognizer(threshold=config.get("lbphThreshold"))
+    model = cv2.face.LBPHFaceRecognizer_create()
+    model.setThreshold(config.get("lbphThreshold"))
 elif config.get("recognitionAlgorithm") == 2:
     to_node("status", "ALGORITHM: Fisher")
     model = cv2.face.createFisherFaceRecognizer(threshold=config.get("fisherThreshold"))
@@ -56,7 +58,25 @@ else:
     model = cv2.face.createEigenFaceRecognizer(threshold=config.get("eigenThreshold"))
 
 # Load training file specified in config.js
-model.load(config.get("trainingFile"))
+#model.read(config.get("trainingFile"))
+
+import os
+
+# katalog, w którym uruchamiasz npm run start (zwykle ~/MagicMirror)
+root_dir = os.getcwd()
+train_rel = config.get("trainingFile")
+
+# jeśli ścieżka konfiguracji jest bezwzględna — użyj jej od razu,
+# inaczej doklej do katalogu głównego MagicMirror
+if os.path.isabs(train_rel):
+    train_file = train_rel
+else:
+    train_file = os.path.join(root_dir, train_rel)
+
+if not os.path.exists(train_file):
+    raise FileNotFoundError(f"Brak pliku treningowego: {train_file}")
+
+
 to_node("status", 'Training data loaded!')
 
 # get camera

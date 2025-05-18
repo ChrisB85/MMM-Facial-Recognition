@@ -15,7 +15,7 @@ import platform
 
 
 def to_node(type, message):
-    print(json.dumps({type: message}))
+    print((json.dumps({type: message})))
     sys.stdout.flush()
 
 
