@@ -47,7 +47,6 @@ to_node("status", 'Loading training data...')
 # set algorithm to be used based on setting in config.js
 if config.get("recognitionAlgorithm") == 1:
     to_node("status", "ALGORITHM: LBPH")
-#    model = cv2.face.createLBPHFaceRecognizer(threshold=config.get("lbphThreshold"))
     model = cv2.face.LBPHFaceRecognizer_create()
     model.setThreshold(config.get("lbphThreshold"))
 elif config.get("recognitionAlgorithm") == 2:
@@ -57,26 +56,25 @@ else:
     to_node("status", "ALGORITHM: Eigen")
     model = cv2.face.createEigenFaceRecognizer(threshold=config.get("eigenThreshold"))
 
-# Load training file specified in config.js
-model.read(train_file)
-
 import os
 
-# katalog, w którym uruchamiasz npm run start (zwykle ~/MagicMirror)
+# Get the training file path
 root_dir = os.getcwd()
 train_rel = config.get("trainingFile")
 
-# jeśli ścieżka konfiguracji jest bezwzględna — użyj jej od razu,
-# inaczej doklej do katalogu głównego MagicMirror
+# If the path is absolute, use it directly, otherwise join with MagicMirror root
 if os.path.isabs(train_rel):
     train_file = train_rel
 else:
     train_file = os.path.join(root_dir, train_rel)
 
 if not os.path.exists(train_file):
-    raise FileNotFoundError(f"Brak pliku treningowego: {train_file}")
+    raise FileNotFoundError(f"Training file not found: {train_file}")
 
 to_node("status", f'Loading training data from: {train_file}')
+
+# Load training file
+model.read(train_file)
 
 to_node("status", 'Training data loaded!')
 
