@@ -56,24 +56,31 @@ Module.register('MMM-Facial-Recognition',{
 		var self = this;
 		var modules = MM.getModules();
 
+		// Helper do pobierania klas
+		function getClasses(module) {
+			if (module.data && module.data.classes) return module.data.classes.split(" ");
+			if (module.classes) return module.classes.split(" ");
+			return [];
+		}
+
 		// Hide default modules
-		modules.filter(function(module) {
-			return module.config.classes && 
-				module.config.classes.includes(self.config.defaultClass) && 
-				(!module.config.classes.includes(self.config.everyoneClass));
-		}).forEach(function(module) {
-			module.hide(1000, function() {
-				Log.log(module.name + ' is hidden.');
-			}, {lockString: self.identifier});
+		modules.forEach(function(module) {
+			var classes = getClasses(module);
+			if (classes.includes(self.config.defaultClass) && !classes.includes(self.config.everyoneClass)) {
+				module.hide(1000, function() {
+					Log.log(module.name + ' is hidden.');
+				}, {lockString: self.identifier});
+			}
 		});
 
 		// Show user-specific modules
-		modules.filter(function(module) {
-			return module.config.classes && module.config.classes.includes(self.current_user);
-		}).forEach(function(module) {
-			module.show(1000, function() {
-				Log.log(module.name + ' is shown.');
-			}, {lockString: self.identifier});
+		modules.forEach(function(module) {
+			var classes = getClasses(module);
+			if (classes.includes(self.current_user)) {
+				module.show(1000, function() {
+					Log.log(module.name + ' is shown.');
+				}, {lockString: self.identifier});
+			}
 		});
 
 		this.sendNotification("CURRENT_USER", this.current_user);
@@ -83,24 +90,30 @@ Module.register('MMM-Facial-Recognition',{
 		var self = this;
 		var modules = MM.getModules();
 
+		function getClasses(module) {
+			if (module.data && module.data.classes) return module.data.classes.split(" ");
+			if (module.classes) return module.classes.split(" ");
+			return [];
+		}
+
 		// Hide user-specific modules
-		modules.filter(function(module) {
-			return module.config.classes && module.config.classes.includes(self.current_user);
-		}).forEach(function(module) {
-			module.hide(1000, function() {
-				Log.log(module.name + ' is hidden.');
-			}, {lockString: self.identifier});
+		modules.forEach(function(module) {
+			var classes = getClasses(module);
+			if (classes.includes(self.current_user)) {
+				module.hide(1000, function() {
+					Log.log(module.name + ' is hidden.');
+				}, {lockString: self.identifier});
+			}
 		});
 
 		// Show default modules
-		modules.filter(function(module) {
-			return module.config.classes && 
-				module.config.classes.includes(self.config.defaultClass) && 
-				(!module.config.classes.includes(self.config.everyoneClass));
-		}).forEach(function(module) {
-			module.show(1000, function() {
-				Log.log(module.name + ' is shown.');
-			}, {lockString: self.identifier});
+		modules.forEach(function(module) {
+			var classes = getClasses(module);
+			if (classes.includes(self.config.defaultClass) && !classes.includes(self.config.everyoneClass)) {
+				module.show(1000, function() {
+					Log.log(module.name + ' is shown.');
+				}, {lockString: self.identifier});
+			}
 		});
 
 		this.sendNotification("CURRENT_USER", "None");
