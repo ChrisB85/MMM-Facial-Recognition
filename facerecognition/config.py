@@ -42,6 +42,21 @@ def get(key):
 
 def get_camera():
     to_node("status", "-" * 20)
+    
+    # Check if mjpg-streamer is enabled
+    if get("useMjpgStreamer") == True:
+        try:
+            import mjpg_stream
+            to_node("status", "Mjpg-Streamer ausgewählt...")
+            stream_url = get("mjpgStreamerUrl")
+            username = get("mjpgStreamerUser") if get("mjpgStreamerUser") else None
+            password = get("mjpgStreamerPassword") if get("mjpgStreamerPassword") else None
+            return mjpg_stream.MjpgStreamCapture(stream_url, username, password)
+        except Exception as e:
+            to_node("status", f"Mjpg-Streamer error: {str(e)}")
+            to_node("status", "Falling back to webcam...")
+    
+    # Try PiCam first if not using USB cam
     try:
         if get("useUSBCam") == False:
             import picam

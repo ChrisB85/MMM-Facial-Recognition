@@ -21,6 +21,12 @@ Module.register('MMM-Facial-Recognition',{
 		eigenThreshold: 3000,
 		// force the use of a usb webcam on raspberry pi (on other platforms this is always true automatically)
 		useUSBCam: false,
+		// Use mjpg-streamer instead of direct camera access
+		useMjpgStreamer: true,
+		// mjpg-streamer configuration
+		mjpgStreamerUrl: "http://localhost:8081/?action=stream",
+		mjpgStreamerUser: "",
+		mjpgStreamerPassword: "",
 		// Path to your training xml
 		trainingFile: 'modules/MMM-Facial-Recognition/training.xml',
 		// recognition intervall in seconds (smaller number = faster but CPU intens!)
