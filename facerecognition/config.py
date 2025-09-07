@@ -43,6 +43,19 @@ def get(key):
 def get_camera():
     to_node("status", "-" * 20)
     
+    # Check if RTSP is enabled
+    if get("useRTSP") == True:
+        try:
+            import rtsp_stream
+            to_node("status", "RTSP ausgewählt...")
+            rtsp_url = get("rtspUrl")
+            username = get("rtspUser") if get("rtspUser") else None
+            password = get("rtspPassword") if get("rtspPassword") else None
+            return rtsp_stream.RTSPCapture(rtsp_url, username, password)
+        except Exception as e:
+            to_node("status", f"RTSP error: {str(e)}")
+            to_node("status", "Falling back to mjpg-streamer...")
+    
     # Check if mjpg-streamer is enabled
     if get("useMjpgStreamer") == True:
         try:

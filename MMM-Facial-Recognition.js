@@ -22,11 +22,17 @@ Module.register('MMM-Facial-Recognition',{
 		// force the use of a usb webcam on raspberry pi (on other platforms this is always true automatically)
 		useUSBCam: false,
 		// Use mjpg-streamer instead of direct camera access
-		useMjpgStreamer: true,
+		useMjpgStreamer: false,
 		// mjpg-streamer configuration
 		mjpgStreamerUrl: "http://localhost:8081/?action=stream",
 		mjpgStreamerUser: "",
 		mjpgStreamerPassword: "",
+		// Use RTSP stream instead of direct camera access
+		useRTSP: true,
+		// RTSP configuration
+		rtspUrl: "rtsp://localhost:8554/cam",
+		rtspUser: "",
+		rtspPassword: "",
 		// Path to your training xml
 		trainingFile: 'modules/MMM-Facial-Recognition/training.xml',
 		// recognition intervall in seconds (smaller number = faster but CPU intens!)
